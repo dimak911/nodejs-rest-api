@@ -8,11 +8,9 @@ module.exports = {
       phone: Joi.string().min(5).max(15).required(),
     });
 
-    const validationResult = schema.validate(req.body);
-    if (validationResult.error) {
-      return res
-        .status(400)
-        .json({ status: validationResult.error.details[0].message });
+    const { error } = schema.validate(req.body);
+    if (error) {
+      next({ status: 400, message: error.details[0].message });
     }
 
     next();
@@ -24,11 +22,9 @@ module.exports = {
       phone: Joi.string().min(5).max(15).optional(),
     }).min(1);
 
-    const validationResult = schema.validate(req.body);
-    if (validationResult.error) {
-      return res
-        .status(400)
-        .json({ status: validationResult.error.details[0].message });
+    const { error } = schema.validate(req.body);
+    if (error) {
+      next({ status: 400, message: error.details[0].message });
     }
 
     next();

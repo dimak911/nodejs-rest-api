@@ -1,5 +1,4 @@
 const express = require("express");
-const { v4: uuid } = require("uuid");
 const {
   addContactValidation,
   updateContactValidation,
@@ -29,12 +28,11 @@ router.get("/:contactId", async (req, res, next) => {
 });
 
 router.post("/", addContactValidation, async (req, res, next) => {
-  const id = uuid();
-  const newContact = { ...req.body, id };
+  const newContactData = req.body;
 
-  await addContact(newContact);
+  const newCreatedContact = await addContact(newContactData);
 
-  res.status(201).json(newContact);
+  res.status(201).json(newCreatedContact);
 });
 
 router.delete("/:contactId", async (req, res, next) => {
