@@ -1,80 +1,60 @@
-const fs = require("fs/promises");
-const path = require("path");
-const { v4: uuid } = require("uuid");
-
-const contactPath = path.join(__dirname, "../models/contacts.json");
+const {
+  getAllContactsDb,
+  getContactByIdDb,
+  createContactDb,
+  updateContactDb,
+  removeContactDb,
+} = require("../service");
 
 const listContacts = async () => {
   try {
-    const contacts = await fs.readFile(contactPath, "utf8");
-    const parsedContacts = JSON.parse(contacts);
+    const contacts = await getAllContactsDb();
 
-    return parsedContacts;
-  } catch (error) {
-    console.error(error);
+    return contacts;
+  } catch (err) {
+    console.error(err.message);
   }
 };
 
 const getContactById = async (contactId) => {
   try {
-    const contacts = await listContacts();
-    const contact = contacts.find((contact) => contact.id === contactId);
+    const contact = await getContactByIdDb(contactId);
+
+    console.log("contact by id: ", contact);
 
     return contact;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const removeContact = async (contactId) => {
-  try {
-    const contacts = await listContacts();
-    const contact = contacts.findIndex((contact) => contact.id === contactId);
-
-    if (contact === -1) return false;
-
-    contacts.splice(contact, 1);
-
-    await fs.writeFile(contactPath, JSON.stringify(contacts), "utf8");
-
-    return true;
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err.message);
   }
 };
 
 const addContact = async (body) => {
   try {
-    const contacts = await listContacts();
-    const id = uuid();
-    const newContact = { ...body, id };
-
-    contacts.push(newContact);
-
-    await fs.writeFile(contactPath, JSON.stringify(contacts), "utf8");
+    const newContact = await createContactDb(body);
 
     return newContact;
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err.message);
   }
 };
 
 const updateContact = async (contactId, body) => {
   try {
-    const contacts = await listContacts();
-    const updateIndex = contacts.findIndex(
-      (contact) => contact.id === contactId
-    );
+    const updatedContact = await updateContactDb(contactId, body);
 
-    if (updateIndex === -1) return false;
+    return updatedContact;
+  } catch (err) {
+    console.error(err.message);
+  }
+};
 
-    contacts[updateIndex] = { ...contacts[updateIndex], ...body };
+const removeContact = async (contactId) => {
+  try {
+    const result = await removeContactDb(contactId);
 
-    await fs.writeFile(contactPath, JSON.stringify(contacts), "utf8");
-
-    return contacts[updateIndex];
-  } catch (error) {
-    console.error(error);
+    return result;
+  } catch (err) {
+    console.error(err.message);
   }
 };
 
