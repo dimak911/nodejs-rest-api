@@ -4,6 +4,7 @@ const {
   createContactDb,
   updateContactDb,
   removeContactDb,
+  updateStatusContactDb,
 } = require("../service");
 
 const listContacts = async () => {
@@ -48,6 +49,16 @@ const updateContact = async (contactId, body) => {
   }
 };
 
+const updateStatusContact = async (contactId, body) => {
+  try {
+    const updatedContact = await updateStatusContactDb(contactId, body);
+
+    return updatedContact;
+  } catch (err) {
+    console.error(err.message);
+  }
+};
+
 const removeContact = async (contactId) => {
   try {
     const result = await removeContactDb(contactId);
@@ -64,4 +75,5 @@ module.exports = {
   removeContact,
   addContact,
   updateContact,
+  updateStatusContact,
 };

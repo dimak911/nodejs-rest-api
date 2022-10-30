@@ -6,6 +6,7 @@ module.exports = {
       name: Joi.string().alphanum().min(3).max(30).required(),
       email: Joi.string().email().required(),
       phone: Joi.string().min(5).max(15).required(),
+      favorite: Joi.boolean().optional(),
     });
 
     const { error } = schema.validate(req.body);
@@ -25,6 +26,18 @@ module.exports = {
     const { error } = schema.validate(req.body);
     if (error) {
       next({ status: 400, message: error.details[0].message });
+    }
+
+    next();
+  },
+  changeFavoriteValidation: (req, res, next) => {
+    const schema = Joi.object({
+      favorite: Joi.boolean().required(),
+    }).min(1);
+
+    const { error } = schema.validate(req.body);
+    if (error) {
+      next({ status: 400, message: "missing field favorite" });
     }
 
     next();
