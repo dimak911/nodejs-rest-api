@@ -1,72 +1,55 @@
-const {
-  getAllContactsDb,
-  getContactByIdDb,
-  createContactDb,
-  updateContactDb,
-  removeContactDb,
-  updateStatusContactDb,
-} = require("../service");
+const Contact = require("../models/schemas/contact");
 
 const listContacts = async () => {
-  try {
-    const contacts = await getAllContactsDb();
+  const contacts = await Contact.find({});
 
-    return contacts;
-  } catch (err) {
-    console.error(err.message);
-  }
+  return contacts;
 };
 
 const getContactById = async (contactId) => {
-  try {
-    const contact = await getContactByIdDb(contactId);
+  const contactById = await Contact.findOne({ _id: contactId }).catch(() => {
+    return null;
+  });
 
-    console.log("contact by id: ", contact);
-
-    return contact;
-  } catch (err) {
-    console.error(err.message);
-  }
+  return contactById;
 };
 
-const addContact = async (body) => {
-  try {
-    const newContact = await createContactDb(body);
+const addContact = async ({ name, email, phone, favorite = false }) => {
+  const createdContact = await Contact.create({ name, email, phone, favorite });
 
-    return newContact;
-  } catch (err) {
-    console.error(err.message);
-  }
+  return createdContact;
 };
 
-const updateContact = async (contactId, body) => {
-  try {
-    const updatedContact = await updateContactDb(contactId, body);
+const updateContact = async (id, fields) => {
+  const updatedContact = await Contact.findByIdAndUpdate({ _id: id }, fields, {
+    new: true,
+  }).catch(() => {
+    return null;
+  });
 
-    return updatedContact;
-  } catch (err) {
-    console.error(err.message);
-  }
+  return updatedContact;
 };
 
-const updateStatusContact = async (contactId, body) => {
-  try {
-    const updatedContact = await updateStatusContactDb(contactId, body);
+const updateStatusContact = async (id, fields) => {
+  const updatedStatusContact = await Contact.findByIdAndUpdate(
+    { _id: id },
+    fields,
+    { new: true }
+  ).catch(() => {
+    return null;
+  });
 
-    return updatedContact;
-  } catch (err) {
-    console.error(err.message);
-  }
+  return updatedStatusContact;
 };
 
-const removeContact = async (contactId) => {
-  try {
-    const result = await removeContactDb(contactId);
+const removeContact = async (id) => {
+  const removedContact = await Contact.findByIdAndRemove({ _id: id }).catch(
+    () => {
+      return null;
+    }
+  );
 
-    return result;
-  } catch (err) {
-    console.error(err.message);
-  }
+  return removedContact;
 };
 
 module.exports = {

@@ -1,5 +1,6 @@
 const express = require("express");
 const { asyncWrapper } = require("../../helpers/apiHelpers");
+const { validationBody } = require("../../middlewares/validationMiddleware");
 const {
   getContactsController,
   getContactByIdController,
@@ -9,10 +10,10 @@ const {
   changeFavoriteController,
 } = require("../../controllers/contactsController");
 const {
-  addContactValidation,
-  updateContactValidation,
-  changeFavoriteValidation,
-} = require("../../middlewares/validationMiddleware");
+  schemaPostContact,
+  schemaPutContact,
+  schemaPatchContact,
+} = require("../../middlewares/schemas/contactsSchemas");
 
 const router = express.Router();
 
@@ -20,19 +21,23 @@ router.get("/", asyncWrapper(getContactsController));
 
 router.get("/:contactId", asyncWrapper(getContactByIdController));
 
-router.post("/", addContactValidation, asyncWrapper(addContactController));
+router.post(
+  "/",
+  validationBody(schemaPostContact),
+  asyncWrapper(addContactController)
+);
 
 router.delete("/:contactId", asyncWrapper(deleteContactController));
 
 router.patch(
   "/:contactId/favorite",
-  changeFavoriteValidation,
+  validationBody(schemaPatchContact),
   asyncWrapper(changeFavoriteController)
 );
 
 router.put(
   "/:contactId",
-  updateContactValidation,
+  validationBody(schemaPutContact),
   asyncWrapper(updateContactController)
 );
 
