@@ -13,7 +13,7 @@ const {
   schemaPostContact,
   schemaPutContact,
   schemaPatchContact,
-} = require("../../middlewares/schemas/contactsSchemas");
+} = require("../../schemas/contactsSchemas");
 
 const router = express.Router();
 

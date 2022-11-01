@@ -1,3 +1,4 @@
+const { notFoundError } = require("../helpers/errors");
 const {
   listContacts,
   getContactById,
@@ -16,7 +17,7 @@ const getContactsController = async (req, res, next) => {
 const getContactByIdController = async (req, res, next) => {
   const contact = await getContactById(req.params.contactId);
 
-  if (!contact) return res.status(404).json({ message: "Not found" });
+  if (!contact) throw notFoundError;
 
   res.status(200).json(contact);
 };
@@ -32,7 +33,7 @@ const addContactController = async (req, res, next) => {
 const deleteContactController = async (req, res, next) => {
   const contactRemoved = await removeContact(req.params.contactId);
 
-  if (!contactRemoved) return res.status(404).json({ message: "Not found" });
+  if (!contactRemoved) throw notFoundError;
 
   res.status(200).json({ message: "Contact deleted" });
 };
@@ -40,7 +41,7 @@ const deleteContactController = async (req, res, next) => {
 const updateContactController = async (req, res, next) => {
   const updatedContact = await updateContact(req.params.contactId, req.body);
 
-  if (!updatedContact) return res.status(404).json({ message: "Not found" });
+  if (!updatedContact) throw notFoundError;
 
   res.status(200).json(updatedContact);
 };
@@ -51,7 +52,7 @@ const changeFavoriteController = async (req, res, next) => {
     req.body
   );
 
-  if (!updatedContact) return res.status(404).json({ message: "Not found" });
+  if (!updatedContact) throw notFoundError;
 
   res.status(200).json(updatedContact);
 };
