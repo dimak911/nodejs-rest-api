@@ -1,54 +1,44 @@
 const express = require("express");
+const { asyncWrapper } = require("../../helpers/apiHelpers");
+const { validationBody } = require("../../middlewares/validationMiddleware");
 const {
-  addContactValidation,
-  updateContactValidation,
-} = require("../../middlewares/validationMiddleware");
+  getContactsController,
+  getContactByIdController,
+  addContactController,
+  deleteContactController,
+  updateContactController,
+  changeFavoriteController,
+} = require("../../controllers/contactsController");
 const {
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
-  updateContact,
-} = require("../../models/contacts");
+  schemaPostContact,
+  schemaPutContact,
+  schemaPatchContact,
+} = require("../../schemas/contactsSchemas");
 
 const router = express.Router();
 
-router.get("/", async (req, res, next) => {
-  const contacts = await listContacts();
+router.get("/", asyncWrapper(getContactsController));
 
-  res.status(200).json(contacts);
-});
+router.get("/:contactId", asyncWrapper(getContactByIdController));
 
-router.get("/:contactId", async (req, res, next) => {
-  const contact = await getContactById(req.params.contactId);
+router.post(
+  "/",
+  validationBody(schemaPostContact),
+  asyncWrapper(addContactController)
+);
 
-  if (!contact) return res.status(404).json({ message: "Not found" });
+router.delete("/:contactId", asyncWrapper(deleteContactController));
 
-  res.status(200).json(contact);
-});
+router.patch(
+  "/:contactId/favorite",
+  validationBody(schemaPatchContact),
+  asyncWrapper(changeFavoriteController)
+);
 
-router.post("/", addContactValidation, async (req, res, next) => {
-  const newContactData = req.body;
-
-  const newCreatedContact = await addContact(newContactData);
-
-  res.status(201).json(newCreatedContact);
-});
-
-router.delete("/:contactId", async (req, res, next) => {
-  const contactRemoved = await removeContact(req.params.contactId);
-
-  if (!contactRemoved) return res.status(404).json({ message: "Not found" });
-
-  res.status(200).json({ message: "Contact deleted" });
-});
-
-router.put("/:contactId", updateContactValidation, async (req, res, next) => {
-  const updatedContact = await updateContact(req.params.contactId, req.body);
-
-  if (!updatedContact) return res.status(404).json({ message: "Not found" });
-
-  res.status(200).json(updatedContact);
-});
+router.put(
+  "/:contactId",
+  validationBody(schemaPutContact),
+  asyncWrapper(updateContactController)
+);
 
 module.exports = router;
