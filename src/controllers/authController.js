@@ -22,7 +22,12 @@ const loginUserController = async (req, res, next) => {
   res.status(200).json(currentUser);
 };
 
+const logoutUserController = async (req, res, next) => {
+  res.sendStatus(204);
+};
+
 module.exports = {
   registerUserController,
   loginUserController,
+  logoutUserController,
 };
