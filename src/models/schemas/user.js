@@ -9,6 +9,7 @@ const user = new Schema({
     type: String,
     required: [true, "Email is required"],
     unique: true,
+    index: true,
   },
   subscription: {
     type: String,

@@ -2,7 +2,7 @@ const express = require("express");
 const {
   registerUserController,
   loginUserController,
-} = require("../../controllers/usersController");
+} = require("../../controllers/authController");
 const { asyncWrapper } = require("../../helpers/apiHelpers");
 const { validationBody } = require("../../middlewares/validationMiddleware");
 const { schemaPostUser } = require("../../schemas/usersSchemas");

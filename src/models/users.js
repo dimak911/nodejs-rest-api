@@ -1,7 +1,7 @@
 const User = require("../models/schemas/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { SECRET_WORD } = require("../config");
+const { SECRET } = require("../config");
 
 const registerUser = async ({ email, password }) => {
   const hashPassword = await bcrypt.hash(password, 10);
@@ -12,6 +12,8 @@ const registerUser = async ({ email, password }) => {
   }).catch(() => {
     return null;
   });
+
+  if (!createdUser) return null;
 
   const user = {
     user: {
@@ -33,14 +35,14 @@ const loginUser = async ({ email, password }) => {
   if (!isPasswordValid) return null;
 
   const payload = {
-    email: currentUser.email,
-    subscription: currentUser.subscription,
+    id: currentUser._id,
   };
-  const token = jwt.sign(payload, SECRET_WORD, { expiresIn: "1w" });
+
+  const token = jwt.sign(payload, SECRET, { expiresIn: "1w" });
 
   const user = {
     token,
-    user: payload,
+    user: { email: currentUser.email, subscription: currentUser.subscription },
   };
 
   return user;

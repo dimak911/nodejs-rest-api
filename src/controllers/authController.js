@@ -1,4 +1,4 @@
-const { duplicateEmailError, customError } = require("../helpers/errors");
+const { customError } = require("../helpers/errors");
 const { registerUser, loginUser } = require("../models/users");
 
 const registerUserController = async (req, res, next) => {
@@ -6,7 +6,7 @@ const registerUserController = async (req, res, next) => {
 
   const createdUser = await registerUser(newUserData);
 
-  if (!createdUser) throw duplicateEmailError;
+  if (!createdUser) throw customError({ status: 409, message: "Email in use" });
 
   res.status(201).json(createdUser);
 };
