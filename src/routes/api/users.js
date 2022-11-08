@@ -3,6 +3,7 @@ const {
   registerUserController,
   loginUserController,
   logoutUserController,
+  getCurrentUserController,
 } = require("../../controllers/authController");
 const { asyncWrapper } = require("../../helpers/apiHelpers");
 const { validationBody } = require("../../middlewares/validationMiddleware");
@@ -24,5 +25,7 @@ router.post(
 );
 
 router.post("/logout", auth, asyncWrapper(logoutUserController));
+
+router.get("/current", auth, asyncWrapper(getCurrentUserController));
 
 module.exports = router;

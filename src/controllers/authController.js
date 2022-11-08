@@ -26,8 +26,15 @@ const logoutUserController = async (req, res, next) => {
   res.sendStatus(204);
 };
 
+const getCurrentUserController = async (req, res, next) => {
+  const { email, subscription } = req.user;
+
+  res.status(200).json({ email, subscription });
+};
+
 module.exports = {
   registerUserController,
   loginUserController,
   logoutUserController,
+  getCurrentUserController,
 };
