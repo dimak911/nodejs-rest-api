@@ -33,7 +33,7 @@ router.post("/logout", auth, asyncWrapper(logoutUserController));
 router.get("/current", auth, asyncWrapper(getCurrentUserController));
 
 router.patch(
-  "/",
+  "/subscription",
   auth,
   validationBody(schemaPatchUser),
   asyncWrapper(changeUserSubscriptionController)
