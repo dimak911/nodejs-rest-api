@@ -1,7 +1,9 @@
 const Contact = require("../models/schemas/contact");
 
-const listContacts = async (page, limit) => {
-  const contacts = await Contact.find({})
+const listContacts = async (page, limit, favorite) => {
+  const favoriteFilter = favorite === null ? {} : { favorite };
+
+  const contacts = await Contact.find(favoriteFilter)
     .limit(limit * 1)
     .skip((page - 1) * limit)
     .exec();

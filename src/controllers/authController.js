@@ -1,5 +1,9 @@
 const { customError } = require("../helpers/errors");
-const { registerUser, loginUser } = require("../models/users");
+const {
+  registerUser,
+  loginUser,
+  changeUserSubscription,
+} = require("../models/users");
 
 const registerUserController = async (req, res, next) => {
   const newUserData = req.body;
@@ -32,9 +36,19 @@ const getCurrentUserController = async (req, res, next) => {
   res.status(200).json({ email, subscription });
 };
 
+const changeUserSubscriptionController = async (req, res, next) => {
+  const { subscription } = req.body;
+  const { _id } = req.user;
+
+  const newSubscription = await changeUserSubscription(subscription, _id);
+
+  res.status(200).json({ subscription: newSubscription });
+};
+
 module.exports = {
   registerUserController,
   loginUserController,
   logoutUserController,
   getCurrentUserController,
+  changeUserSubscriptionController,
 };

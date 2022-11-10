@@ -48,7 +48,20 @@ const loginUser = async ({ email, password }) => {
   return user;
 };
 
+const changeUserSubscription = async (subscription, _id) => {
+  const changedUser = await User.findByIdAndUpdate(
+    { _id },
+    { subscription },
+    {
+      returnOriginal: false,
+    }
+  );
+
+  return changedUser.subscription;
+};
+
 module.exports = {
   registerUser,
   loginUser,
+  changeUserSubscription,
 };

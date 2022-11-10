@@ -9,8 +9,8 @@ const {
 } = require("../models/contacts");
 
 const getContactsController = async (req, res, next) => {
-  const { page = 1, limit = 10 } = req.query;
-  const contacts = await listContacts(page, limit);
+  const { page = 1, limit = 10, favorite = null } = req.query;
+  const contacts = await listContacts(page, limit, favorite);
 
   res.status(200).json(contacts);
 };
