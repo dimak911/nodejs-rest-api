@@ -4,6 +4,8 @@ const { DB_HOST_TEST } = require("../src/config");
 const request = require("supertest");
 const User = require("../src/models/schemas/user");
 
+jest.setTimeout(10000);
+
 const correctUser = {
   email: "test1@mail.com",
   password: "123456",
@@ -74,6 +76,7 @@ describe("signup", () => {
 describe("login", () => {
   beforeAll(async () => {
     await mongoose.connect(DB_HOST_TEST);
+    await User.findOneAndUpdate({ email: correctUser.email }, { verify: true });
   });
 
   afterAll(async () => {
